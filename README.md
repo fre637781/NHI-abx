@@ -27,6 +27,15 @@ python3 -m http.server 8000
 # 開啟 http://localhost:8000
 ```
 
+### 打包成單一檔案
+
+```bash
+python3 tools/bundle.py     # 產生 dist/artifact.html
+```
+
+`dist/artifact.html` 把樣式、程式與全部條文內嵌在同一個檔案，
+不依賴任何外部資源，可直接寄送、放上任何靜態空間，或發佈為 Artifact。
+
 直接用瀏覽器開啟 `index.html`（`file://`）也可以，此時資料改由 `data/antimicrobials.js` 載入。
 
 ### 發佈到 GitHub Pages
@@ -135,6 +144,7 @@ data/antimicrobials.js     自動產生的後援
 tools/import_nhi.py        第10節條文匯入工具（官方 PDF／TXT）
 tools/import_firstline.py  附表一 第一線抗微生物製劑品名表匯入工具
 tools/build.py             由 JSON 產生 JS 後援
+tools/bundle.py            打包成單一檔案 dist/artifact.html
 ```
 
 ## 授權

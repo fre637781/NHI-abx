@@ -57,6 +57,10 @@
 
   /* ---------- 資料載入 ---------- */
   function loadData() {
+    // 單檔打包版（dist/artifact.html）已內嵌資料，不需再發出網路請求
+    if (window.NHI_BUNDLED && window.NHI_DATA) {
+      return Promise.resolve(window.NHI_DATA);
+    }
     return fetch("data/antimicrobials.json", { cache: "no-cache" })
       .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
       .catch(function () {

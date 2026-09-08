@@ -197,3 +197,4 @@ mark{background:#ffe58a;color:inherit;border-radius:2px;padding:0 1px}
 .fl-cols h3{margin-top:0}
 .fl-cols .drug-list{flex-direction:column;align-items:flex-start}
 @media (max-width:560px){.fl-cols{grid-template-columns:1fr}}
+.filter-group[hidden]{display:none}
