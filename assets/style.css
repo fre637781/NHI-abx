@@ -165,3 +165,35 @@ mark{background:#ffe58a;color:inherit;border-radius:2px;padding:0 1px}
   .card-body{display:block!important}
   details:not([open]) .card-body{display:block!important}
 }
+
+/* ---- 官方匯入版新增樣式 ---- */
+.badge.first{background:var(--accent);color:#fff;border-color:transparent;font-weight:600}
+:root[data-theme="dark"] .badge.first{color:#0d1a19}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .badge.first{color:#0d1a19}}
+
+.prov-list{list-style:none;margin:0 0 12px;padding:0}
+.prov-list li{
+  font-size:.93rem;margin:5px 0;padding-left:2px;line-height:1.7;
+  border-left:2px solid transparent;
+}
+.prov-list li.lv1{margin-left:1.3em}
+.prov-list li.lv2{margin-left:2.6em;color:var(--ink-soft)}
+.prov-list li.lv3{margin-left:3.9em;color:var(--ink-soft)}
+.prov-list li.lv1,.prov-list li.lv2,.prov-list li.lv3{
+  border-left:2px solid var(--line);padding-left:9px;
+}
+
+.firstline-note{
+  margin:10px 0 0;font-size:.83rem;background:var(--accent-soft);color:var(--accent);
+  border-radius:4px;padding:6px 10px;
+}
+.revisions{margin:10px 0 0;font-size:.78rem;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+
+.card.is-deleted{opacity:.6}
+.card.is-deleted h2{text-decoration:line-through}
+
+.firstline-panel{margin-top:26px}
+.fl-cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.fl-cols h3{margin-top:0}
+.fl-cols .drug-list{flex-direction:column;align-items:flex-start}
+@media (max-width:560px){.fl-cols{grid-template-columns:1fr}}
