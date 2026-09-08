@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>抗微生物劑健保給付規定查詢</title>
+<meta name="description" content="健保藥品給付規定第10節「抗微生物劑」查詢工具：可依藥名、分類、事前審查、藥敏報告等條件快速檢索。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128138;</text></svg>">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#results">跳至查詢結果</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <div class="brand">
+      <h1>抗微生物劑<span> 健保給付規定查詢</span></h1>
+      <p class="sub" id="sectionName">第10節 抗微生物劑 Antimicrobial agents</p>
+    </div>
+    <button id="themeToggle" class="ghost-btn" type="button" aria-label="切換深色/淺色模式">🌓</button>
+  </div>
+</header>
+
+<div class="notice wrap" id="dataNotice" role="status">
+  <strong id="noticeStatus">資料狀態載入中…</strong>
+  <span id="noticeText"></span>
+</div>
+
+<main class="wrap">
+  <section class="search-panel" aria-label="查詢條件">
+    <div class="search-row">
+      <label class="visually-hidden" for="q">搜尋藥名或條文</label>
+      <input id="q" type="search" autocomplete="off" spellcheck="false"
+             placeholder="搜尋藥名、商品名、適應症或條文關鍵字（按 / 快速聚焦）">
+      <button id="clearBtn" class="ghost-btn" type="button" title="清除所有條件">清除</button>
+    </div>
+
+    <div class="filter-group" role="group" aria-label="藥品分類">
+      <span class="filter-label">分類</span>
+      <div id="catChips" class="chips"></div>
+    </div>
+
+    <div class="filter-group" role="group" aria-label="給付方式">
+      <span class="filter-label">給付</span>
+      <div id="fundChips" class="chips"></div>
+    </div>
+
+    <div class="filter-group" role="group" aria-label="條件標記">
+      <span class="filter-label">限制</span>
+      <div id="flagChips" class="chips"></div>
+    </div>
+  </section>
+
+  <div class="toolbar">
+    <p id="count" class="count" aria-live="polite"></p>
+    <div class="toolbar-actions">
+      <label class="sort-label" for="sort">排序</label>
+      <select id="sort">
+        <option value="category">依分類</option>
+        <option value="title">依藥名</option>
+        <option value="section">依條號</option>
+      </select>
+      <button id="expandAll" class="ghost-btn" type="button">全部展開</button>
+      <button id="printBtn" class="ghost-btn" type="button">列印</button>
+    </div>
+  </div>
+
+  <section id="results" class="results" aria-live="polite"></section>
+  <p id="empty" class="empty" hidden>找不到符合條件的項目。請放寬關鍵字或清除篩選條件。</p>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p><strong>免責聲明：</strong>本頁為臨床查詢輔助工具，內容為整理摘要，<b>非官方文件</b>。給付條件、條號與生效日期一律以中央健康保險署最新公告為準。</p>
+    <p id="sourceLine"></p>
+    <p class="meta" id="metaLine"></p>
+  </div>
+</footer>
+
+<script src="data/antimicrobials.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
