@@ -40,8 +40,17 @@ python3 tools/bundle.py     # 產生 dist/artifact.html
 
 ### 發佈到 GitHub Pages
 
-Repository → Settings → Pages → Source 選 **Deploy from a branch**，
-分支選本分支、資料夾選 `/ (root)` 即可。專案已含 `.nojekyll`。
+已內建 `.github/workflows/pages.yml`，每次 push 到本分支就會自動部署。
+**首次需要手動啟用一次**（GitHub 不允許 workflow 的 `GITHUB_TOKEN` 自行建立 Pages 站台）：
+
+1. Repository → **Settings** → **Pages**
+2. **Source** 選 **GitHub Actions**
+3. 回到 **Actions** 分頁，重跑 `Deploy GitHub Pages`（或直接再 push 一次）
+
+完成後網址為 `https://<帳號>.github.io/NHI-abx/`。專案已含 `.nojekyll`，
+不會被 Jekyll 處理。
+
+部署前 workflow 會先驗證 `data/antimicrobials.json` 可解析且為官方匯入版本。
 
 ## 資料
 
