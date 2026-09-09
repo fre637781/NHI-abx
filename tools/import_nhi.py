@@ -36,21 +36,53 @@ SOURCE = {
 NOTICE = ("本頁條文由健保署官方檔案匯入。給付條件仍以健保署最新公告為準；"
           "文字擷取自 PDF，若與官方原文有出入請以原文為準。")
 
-CATEGORIES = [
-    {"id": "general",    "label": "通則"},
-    {"id": "antibiotic", "label": "抗細菌劑"},
-    {"id": "antifungal", "label": "抗黴菌劑"},
-    {"id": "antiviral",  "label": "抗病毒劑"},
-    {"id": "hepatitis",  "label": "肝炎抗病毒"},
-    {"id": "hiv",        "label": "抗 HIV"},
-]
-FUNDING_TYPES = [
-    {"id": "nhi",    "label": "健保給付"},
-    {"id": "public", "label": "公費（疾管署等）"},
-    {"id": "mixed",  "label": "健保／公費併行"},
-]
+# 各章節的設定：分類、頂層節次對應、額外旗標
+CHAPTER_PROFILES = {
+    "10": {
+        "topicId": "antimicrobials",
+        "sectionName": "第10節 抗微生物劑 Antimicrobial agents",
+        "categories": [
+            {"id": "general",    "label": "通則"},
+            {"id": "antibiotic", "label": "抗細菌劑"},
+            {"id": "antifungal", "label": "抗黴菌劑"},
+            {"id": "antiviral",  "label": "抗病毒劑"},
+            {"id": "hepatitis",  "label": "肝炎抗病毒"},
+            {"id": "hiv",        "label": "抗 HIV"},
+        ],
+        "parentRules": [
+            ("general",    ("通則",)),
+            ("hiv",        ("人類免疫缺乏", "愛滋")),
+            ("antifungal", ("抗黴菌", "Antifungal")),
+            ("antiviral",  ("抗病毒", "Antiviral")),
+        ],
+        "defaultCategory": "antibiotic",
+        "hepatitisSplit": True,      # 10.7 之下依成分名再分出肝炎用藥
+        "keepFirstLine": True,       # 保留附表一資料
+    },
+    "8": {
+        "topicId": "immunologics",
+        "sectionName": "第8節 免疫製劑 Immunologic agents",
+        "categories": [
+            {"id": "vaccine",        "label": "疫苗與免疫球蛋白"},
+            {"id": "immunomodulator", "label": "免疫調節劑"},
+        ],
+        "parentRules": [
+            ("vaccine",         ("疫苗", "免疫球蛋白", "Vaccines")),
+            ("immunomodulator", ("免疫調節", "Immunomodulator")),
+        ],
+        "defaultCategory": "immunomodulator",
+        "hepatitisSplit": False,
+        "keepFirstLine": False,
+        # 免疫調節劑用藥前多要求結核／B肝篩檢，對感染科是重點
+        "extraFlags": {
+            "infectionScreening": ("潛伏結核", "結核病篩檢", "結核菌", "胸部 X 光",
+                                   "HBsAg", "B型肝炎", "B 型肝炎", "帶原", "篩檢",
+                                   "肝炎病毒", "伺機性感染"),
+        },
+    },
+}
 
-# 條號行，例如「10.1.抗微生物劑用藥給付規定通則：」
+# 條號行，例如「10.1.抗微生物劑用藥給付規定通則：」「8.2.4.6.1.…」
 SECTION_RE = re.compile(r"^(\d{1,2}(?:\.\d{1,3})+)\.?\s*(.*)$")
 # 條號後若接這些字，代表是內文的交叉引用（如「10.7.4.之 1至4項」）而非新條號
 CROSSREF_PREFIX = ("之", "至", "項", "款", "及", "或", "、", "，", "。", "第")
@@ -72,7 +104,7 @@ REVISION_RE = re.compile(r"[（(]\s*(\d{2,3}/\d{1,2}/\d{1,2}[^（()）]*)[）)]"
 DATE_ONLY_RE = re.compile(r"^[\s、,;；()（）]*\d{2,3}/\d{1,2}/\d{1,2}[\s、,;；()（）\d/]*$")
 # 品名，如「（如 Augmentin tab）」
 BRAND_RE = re.compile(r"[（(]\s*如\s*([^）)]+)[）)]")
-# 英文成分名
+# 英文成分名（允許「Ceftaroline fosamil」「Amphotericin B」這類多字成分名）
 GENERIC_RE = re.compile(
     r"[A-Za-z][A-Za-z\-]{3,}"
     r"(?:\s*[+＋/]\s*[A-Za-z][A-Za-z\-]{3,}"
@@ -80,24 +112,23 @@ GENERIC_RE = re.compile(
     r"|\s+[A-Z](?![A-Za-z]))*"
 )
 GENERIC_STOP = {
-    "Antimicrobial", "Antifungal", "Antiviral", "drugs", "agents", "Miscellaneous",
+    "Antimicrobial", "Antifungal", "Antiviral", "Immunologic", "Immunomodulators",
+    "Vaccines", "Immunoglobulins", "drugs", "agents", "Miscellaneous",
     "Penicillins", "Cephalosporins", "Macrolides", "Carbapenem", "Injection",
     "inj", "tab", "cap", "oral", "solution", "suspension", "powder", "Tablets",
     "capsules", "extended", "release", "complex", "dispersion", "colloidal",
 }
 
-# 10.7 之下依成分名判定為肝炎用藥（避免用內文關鍵字誤判）
+# 第10節 10.7 之下依成分名判定為肝炎用藥（避免用內文關鍵字誤判）
 HBV_DRUGS = ("lamivudine", "entecavir", "telbivudine", "adefovir", "tenofovir")
 HCV_DRUGS = ("ribavirin", "daclatasvir", "asunaprevir", "ombitasvir", "paritaprevir",
              "dasabuvir", "elbasvir", "grazoprevir", "ledipasvir", "sofosbuvir",
              "glecaprevir", "pibrentasvir", "velpatasvir", "voxilaprevir")
 
-# 依頂層節標題判定分類
-PARENT_CATEGORY_RULES = [
-    ("general",    ("通則",)),
-    ("hiv",        ("人類免疫缺乏", "愛滋")),
-    ("antifungal", ("抗黴菌", "Antifungal")),
-    ("antiviral",  ("抗病毒", "Antiviral")),
+FUNDING_TYPES = [
+    {"id": "nhi",    "label": "健保給付"},
+    {"id": "public", "label": "公費（疾管署等）"},
+    {"id": "mixed",  "label": "健保／公費併行"},
 ]
 
 FLAG_RULES = {
@@ -305,26 +336,25 @@ def build_provisions(body):
             limited, revisions)
 
 
-def guess_category(num, title, parents):
-    top = num.split(".")[0] + "." + num.split(".")[1]
+def guess_category(num, title, parents, profile):
+    parts = num.split(".")
+    top = parts[0] + "." + parts[1] if len(parts) > 1 else num
     parent_title = parents.get(top, "")
-    for cat, keys in PARENT_CATEGORY_RULES:
+    base = profile["defaultCategory"]
+    for cat, keys in profile["parentRules"]:
         if any(k in parent_title for k in keys):
             base = cat
             break
-    else:
-        base = "antibiotic"
-    if base == "antiviral":
+    if profile.get("hepatitisSplit") and base == "antiviral":
         low = title.lower()
-        if any(d in low for d in HBV_DRUGS) or any(d in low for d in HCV_DRUGS):
-            return "hepatitis"
-        if "肝炎" in title:
+        if any(d in low for d in HBV_DRUGS) or any(d in low for d in HCV_DRUGS) or "肝炎" in title:
             return "hepatitis"
     return base
 
 
-def parse(lines):
+def parse(lines, profile=None):
     chapter = detect_chapter(lines)
+    profile = profile or CHAPTER_PROFILES.get(chapter) or CHAPTER_PROFILES["10"]
     blocks, seen, cur = [], set(), None
     for line in lines:
         hit = is_section_start(line, seen, chapter)
@@ -380,7 +410,7 @@ def parse(lines):
             "sectionConfidence": "high",
             "group": top,
             "groupTitle": split_title(parents.get(top, ""))[0] if top in parents else "",
-            "category": guess_category(b["num"], title, parents),
+            "category": guess_category(b["num"], title, parents, profile),
             "title": title or b["num"],
             "drugs": parse_drugs(raw_title),
             "funding": "public" if any(k in blob for k in PUBLIC_KEYWORDS) else "nhi",
@@ -389,7 +419,10 @@ def parse(lines):
             "limited": limited,
             "revisions": revisions,
             "deleted": deleted,
-            "flags": {f: any(k in blob for k in keys) for f, keys in FLAG_RULES.items()},
+            "flags": dict(
+                [(f, any(k in blob for k in keys)) for f, keys in FLAG_RULES.items()] +
+                [(f, any(k in blob for k in keys))
+                 for f, keys in (profile.get("extraFlags") or {}).items()]),
             "tags": [],
             "sourceConfirmed": True,
         })
@@ -404,55 +437,69 @@ def parse(lines):
 
 # --------------------------------------------------------------------------- #
 def main():
-    ap = argparse.ArgumentParser(description="匯入健保署第10節抗微生物劑給付規定")
+    ap = argparse.ArgumentParser(description="匯入健保署藥品給付規定章節（第8節、第10節…）")
     ap.add_argument("path", help="官方 PDF 或 TXT 檔路徑")
     ap.add_argument("--effective", help="生效日期，例如 115-07-23")
     ap.add_argument("--version", help="資料版本標示，預設用今天日期")
+    ap.add_argument("--out", help="輸出 JSON 路徑，預設依章節自動決定")
     ap.add_argument("--dry-run", action="store_true", help="只印出解析結果，不寫檔")
     args = ap.parse_args()
 
     if not os.path.exists(args.path):
         sys.exit("找不到檔案：%s" % args.path)
 
-    items = parse(clean_lines(extract_text(args.path)))
-    if not items:
-        sys.exit("沒有解析到任何條號，請確認檔案是「第10節 抗微生物劑」。")
+    lines = clean_lines(extract_text(args.path))
+    chapter = detect_chapter(lines)
+    profile = CHAPTER_PROFILES.get(chapter)
+    if profile is None:
+        sys.exit("尚未支援第 %s 節。請在 CHAPTER_PROFILES 加入該章節設定。" % chapter)
 
-    print("解析到 %d 個條號" % len(items))
+    items = parse(lines, profile)
+    if not items:
+        sys.exit("沒有解析到任何條號，請確認檔案內容。")
+
+    out_path = args.out or os.path.join(ROOT, "data", profile["topicId"] + ".json")
+
+    print("第 %s 節：解析到 %d 個條號" % (chapter, len(items)))
     for it in items:
         if it["section"].count(".") == 1:
-            kids = len([x for x in items if x["group"] == it["section"] and x["section"] != it["section"]])
-            print("  %-8s %-34s %-12s 子項 %d" %
+            kids = len([x for x in items if x["group"] == it["section"]
+                        and x["section"] != it["section"]])
+            print("  %-8s %-34s %-16s 子項 %d" %
                   (it["section"], it["title"][:34], it["category"], kids))
     if args.dry_run:
         print("\n--dry-run：未寫入檔案。")
         return
 
     first_line = {}
-    if os.path.exists(OUT_JSON):
-        with io.open(OUT_JSON, encoding="utf-8") as fh:
+    if profile.get("keepFirstLine") and os.path.exists(out_path):
+        with io.open(out_path, encoding="utf-8") as fh:
             first_line = (json.load(fh).get("meta", {}) or {}).get("firstLine", {}) or {}
 
+    meta = {
+        "topicId": profile["topicId"],
+        "sectionName": profile["sectionName"],
+        "status": "imported",
+        "statusLabel": "已由健保署官方檔案匯入",
+        "version": args.version or ("import-" + date.today().isoformat()),
+        "generatedAt": date.today().isoformat(),
+        "effectiveDate": args.effective,
+        "source": dict(SOURCE, name="衛生福利部中央健康保險署／藥品給付規定 " +
+                                    profile["sectionName"]),
+        "notice": NOTICE,
+    }
+    if profile.get("keepFirstLine"):
+        meta["firstLine"] = first_line
+
     data = {
-        "meta": {
-            "title": "健保藥品給付規定 — 抗微生物劑查詢",
-            "sectionName": "第10節 抗微生物劑 Antimicrobial agents",
-            "status": "imported",
-            "statusLabel": "已由健保署官方檔案匯入",
-            "version": args.version or ("import-" + date.today().isoformat()),
-            "generatedAt": date.today().isoformat(),
-            "effectiveDate": args.effective,
-            "source": SOURCE,
-            "notice": NOTICE,
-            "firstLine": first_line,
-        },
-        "categories": CATEGORIES,
+        "meta": meta,
+        "categories": profile["categories"],
         "fundingTypes": FUNDING_TYPES,
         "items": items,
     }
-    with io.open(OUT_JSON, "w", encoding="utf-8") as fh:
+    with io.open(out_path, "w", encoding="utf-8") as fh:
         fh.write(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
-    print("\n已寫入 %s" % OUT_JSON)
+    print("\n已寫入 %s" % out_path)
     subprocess.call([sys.executable, os.path.join(ROOT, "tools", "build.py")])
 
 

@@ -1,21 +1,21 @@
 {
   "meta": {
-    "title": "健保藥品給付規定 — 抗微生物劑查詢",
+    "topicId": "antimicrobials",
     "sectionName": "第10節 抗微生物劑 Antimicrobial agents",
     "status": "imported",
     "statusLabel": "已由健保署官方檔案匯入",
     "version": "115.07.23",
-    "generatedAt": "2026-09-08",
+    "generatedAt": "2026-09-09",
     "effectiveDate": "115-07-23",
     "source": {
-      "name": "衛生福利部中央健康保險署／藥品給付規定 第10節 抗微生物劑",
+      "name": "衛生福利部中央健康保險署／藥品給付規定 第10節 抗微生物劑 Antimicrobial agents",
       "url": "https://www.nhi.gov.tw/ch/cp-7593-ad2a9-3397-1.html",
       "fullUrl": "https://www.nhi.gov.tw/ch/np-2508-1.html"
     },
     "notice": "本頁條文由健保署官方檔案匯入。給付條件仍以健保署最新公告為準；文字擷取自 PDF，若與官方原文有出入請以原文為準。",
     "firstLine": {
       "title": "附表一 全民健康保險醫療常用第一線抗微生物製劑品名表",
-      "importedAt": "2026-09-08",
+      "importedAt": "2026-09-09",
       "oral": [
         {
           "name": "Amoxicillin",

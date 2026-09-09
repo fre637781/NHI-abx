@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>抗微生物劑健保給付規定查詢</title>
-<meta name="description" content="健保藥品給付規定第10節「抗微生物劑」查詢工具：可依藥名、分類、事前審查、藥敏報告等條件快速檢索。">
+<title>感染科給付規定查詢</title>
+<meta name="description" content="健保藥品給付規定感染科常用章節查詢：抗微生物劑（第10節）、免疫製劑（第8節）與給付通則，可依藥名、分類、事前審查等條件檢索。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128138;</text></svg>">
 <link rel="stylesheet" href="assets/style.css">
 </head>
@@ -14,8 +14,8 @@
 <header class="site-header">
   <div class="wrap">
     <div class="brand">
-      <h1>抗微生物劑<span> 健保給付規定查詢</span></h1>
-      <p class="sub" id="sectionName">第10節 抗微生物劑 Antimicrobial agents</p>
+      <h1 id="siteTitle">感染科<span> 給付規定查詢</span></h1>
+      <p class="sub" id="sectionName">健保藥品給付規定</p>
     </div>
     <button id="themeToggle" class="ghost-btn" type="button" aria-label="切換深色/淺色模式">🌓</button>
   </div>
@@ -27,11 +27,13 @@
 </div>
 
 <main class="wrap">
+  <nav class="topic-tabs" id="topicTabs" aria-label="條文主題"></nav>
+
   <section class="search-panel" aria-label="查詢條件">
     <div class="search-row">
       <label class="visually-hidden" for="q">搜尋藥名或條文</label>
       <input id="q" type="search" autocomplete="off" spellcheck="false"
-             placeholder="搜尋藥名、商品名、適應症或條文關鍵字（按 / 快速聚焦）">
+             placeholder="搜尋藥名、商品名、適應症、條號或條文關鍵字（按 / 快速聚焦）">
       <button id="clearBtn" class="ghost-btn" type="button" title="清除所有條件">清除</button>
     </div>
 
@@ -98,7 +100,6 @@
   </div>
 </footer>
 
-<script src="data/antimicrobials.js"></script>
 <script src="assets/app.js"></script>
 </body>
 </html>

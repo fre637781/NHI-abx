@@ -33,29 +33,31 @@ def main():
     html = read("index.html")
     css = read("assets", "style.css")
     js = read("assets", "app.js")
-    data = json.loads(read("data", "antimicrobials.json"))
+    index = json.loads(read("data", "index.json"))
 
-    # 取出 <body> 內容；外層 doctype/head/body 由 Artifact 容器提供
+    datasets = {}
+    for topic in index.get("topics", []):
+        datasets[topic["id"]] = json.loads(read(topic["file"]))
+
     m = re.search(r"<body[^>]*>(.*)</body>", html, re.S)
     if not m:
         sys.exit("index.html 找不到 <body>")
     body = m.group(1)
 
     title_m = re.search(r"<title>(.*?)</title>", html, re.S)
-    title = title_m.group(1).strip() if title_m else "抗微生物劑健保條文查詢"
+    title = title_m.group(1).strip() if title_m else "感染科給付規定查詢"
 
-    # 移除外部資源引用，改為內嵌
-    body = re.sub(r'\s*<script src="[^"]*"></script>', "", body)
-    body = body.strip()
+    body = re.sub(r'\s*<script src="[^"]*"></script>', "", body).strip()
 
-    payload = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
+    payload = json.dumps({"index": index, "datasets": datasets},
+                         ensure_ascii=False, separators=(",", ":"))
 
     parts = [
         "<title>%s</title>" % title,
         FONT_LINK,
         "<style>\n%s\n</style>" % css,
         body,
-        "<script>window.NHI_BUNDLED=true;window.NHI_DATA=%s;</script>" % payload,
+        "<script>window.NHI_BUNDLED=true;window.NHI_BUNDLE=%s;</script>" % payload,
         "<script>\n%s\n</script>" % js,
     ]
     out = "\n".join(parts) + "\n"
@@ -64,8 +66,9 @@ def main():
         os.makedirs(DIST)
     with io.open(OUT, "w", encoding="utf-8") as fh:
         fh.write(out)
-    print("已寫入 %s（%.0f KB，%d 個條號）" %
-          (OUT, len(out.encode("utf-8")) / 1024.0, len(data.get("items", []))))
+    total = sum(len(d.get("items", [])) for d in datasets.values())
+    print("已寫入 %s（%.0f KB，%d 個主題，共 %d 項）" %
+          (OUT, len(out.encode("utf-8")) / 1024.0, len(datasets), total))
 
 
 if __name__ == "__main__":

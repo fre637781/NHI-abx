@@ -198,3 +198,35 @@ mark{background:#ffe58a;color:inherit;border-radius:2px;padding:0 1px}
 .fl-cols .drug-list{flex-direction:column;align-items:flex-start}
 @media (max-width:560px){.fl-cols{grid-template-columns:1fr}}
 .filter-group[hidden]{display:none}
+
+/* ---- 多主題分頁 ---- */
+.topic-tabs{
+  display:flex;gap:6px;flex-wrap:wrap;margin-top:16px;
+  border-bottom:1px solid var(--line);padding-bottom:0;
+}
+.topic-tab{
+  display:flex;flex-direction:column;gap:1px;align-items:flex-start;
+  border:1px solid var(--line);border-bottom:none;
+  background:var(--chip-bg);color:var(--ink-soft);
+  border-radius:8px 8px 0 0;padding:7px 14px 8px;cursor:pointer;
+  font-family:inherit;font-size:.9rem;line-height:1.3;
+  position:relative;top:1px;
+}
+.topic-tab:hover{color:var(--accent);border-color:var(--accent)}
+.topic-tab[aria-pressed="true"]{
+  background:var(--panel);color:var(--ink);border-color:var(--line);
+  border-bottom:1px solid var(--panel);font-weight:600;
+}
+.topic-tab .tt-short{font-size:.7rem;opacity:.7;font-weight:400}
+.topic-tab:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+
+.badge.topic{background:var(--ink-soft);color:var(--panel);border-color:transparent;font-weight:600}
+.badge.screen{border-color:#7c5cbf;color:#6b4bb0}
+:root[data-theme="dark"] .badge.screen{color:#b9a3e8}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .badge.screen{color:#b9a3e8}}
+
+@media (max-width:560px){
+  .topic-tab{padding:6px 10px 7px;font-size:.85rem}
+  .topic-tab .tt-short{display:none}
+}
+@media print{.topic-tabs{display:none!important}}

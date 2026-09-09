@@ -24,16 +24,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 確認資料檔可解析，避免把壞掉的資料部署出去
+      # 確認 index.json 與各主題資料檔可解析，避免把壞掉的資料部署出去
       - name: Validate data
         run: |
           python3 - <<'PY'
-          import json
-          d = json.load(open('data/antimicrobials.json'))
-          items = d['items']
-          assert items, 'no items'
-          assert d['meta']['status'] == 'imported', d['meta']['status']
-          print('OK: %d 個條號，版本 %s' % (len(items), d['meta']['version']))
+          import json, os
+          index = json.load(open('data/index.json'))
+          topics = index['topics']
+          assert topics, 'index.json 沒有任何主題'
+          total = 0
+          for t in topics:
+              assert os.path.exists(t['file']), '缺少主題資料檔 %s' % t['file']
+              d = json.load(open(t['file']))
+              assert d['items'], '%s 沒有任何條文' % t['file']
+              assert d['meta']['status'] == 'imported', \
+                  '%s 尚未匯入官方資料（status=%s）' % (t['file'], d['meta']['status'])
+              total += len(d['items'])
+              print('OK %-16s %3d 項  版本 %s' % (t['id'], len(d['items']), d['meta']['version']))
+          print('共 %d 個主題、%d 項條文' % (len(topics), total))
           PY
 
       - name: Configure Pages

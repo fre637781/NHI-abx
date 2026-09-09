@@ -1,0 +1,33 @@
+{
+  "site": {
+    "title": "感染科給付規定查詢",
+    "subtitle": "健保藥品給付規定 · 感染科常用章節",
+    "notice": "本站條文由官方檔案匯入，非官方文件；轉檔可能有排版誤差。給付條件、條號與生效日期一律以主管機關最新公告為準，用藥決策請對照官方原文與專業判斷。"
+  },
+  "topics": [
+    {
+      "id": "antimicrobials",
+      "label": "抗微生物劑",
+      "short": "第10節",
+      "file": "data/antimicrobials.json",
+      "authority": "健保署",
+      "blurb": "抗生素、抗黴菌、抗病毒、肝炎與 HIV 用藥；含附表一第一線品名表"
+    },
+    {
+      "id": "immunologics",
+      "label": "免疫製劑",
+      "short": "第8節",
+      "file": "data/immunologics.json",
+      "authority": "健保署",
+      "blurb": "疫苗與免疫球蛋白、免疫調節劑；含生物製劑用藥前之感染症篩檢要求"
+    },
+    {
+      "id": "general-rules",
+      "label": "給付通則",
+      "short": "通則",
+      "file": "data/general-rules.json",
+      "authority": "健保署",
+      "blurb": "各節條文共同適用的通則，例如「不受通則八之限制」所指的內服液劑規定"
+    }
+  ]
+}
